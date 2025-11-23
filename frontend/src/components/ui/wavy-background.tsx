@@ -13,10 +13,27 @@ export const WavyBackground = ({
   speed = "fast",
   waveOpacity = 0.5,
   ...props
+}: {
+  children?: React.ReactNode;
+  className?: string;
+  containerClassName?: string;
+  colors?: string[];
+  waveWidth?: number;
+  backgroundFill?: string;
+  blur?: number;
+  speed?: "slow" | "fast";
+  waveOpacity?: number;
+  [key: string]: any;
 }) => {
   const noise = createNoise3D();
-  let w, h, nt, i, x, ctx, canvas;
-  const canvasRef = useRef(null);
+  let w: number,
+    h: number,
+    nt: number,
+    i: number,
+    x: number,
+    ctx: any,
+    canvas: any;
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const getSpeed = () => {
     switch (speed) {
       case "slow":
@@ -56,7 +73,7 @@ export const WavyBackground = ({
     "#22d3ee",
   ];
   
-  const drawWave = (n) => {
+  const drawWave = (n: number) => {
     if (!ctx) return;
     nt += getSpeed();
     for (i = 0; i < n; i++) {
@@ -72,7 +89,7 @@ export const WavyBackground = ({
     }
   };
 
-  let animationId;
+  let animationId: number;
   const render = () => {
     if (!ctx) return;
     ctx.fillStyle = backgroundFill || "black";

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Search, Home, MapPin, Phone, Mail, Facebook, Instagram, Menu, X, ArrowRight } from 'lucide-react';
 import { WavyBackground } from './components/ui/wavy-background';
 
-function LandingPage({ onEnter }) {
+function LandingPage({ onEnter }: { onEnter: () => void }) {
   return (
     <WavyBackground 
       className="max-w-4xl mx-auto pb-40" 
@@ -96,11 +96,22 @@ function MainPage() {
             <div className="max-w-3xl mx-auto bg-white rounded-lg p-4 shadow-lg flex flex-col md:flex-row gap-4">
               <div className="flex-1 flex items-center border-b md:border-b-0 md:border-r border-gray-200 px-4 py-2">
                 <MapPin className="h-5 w-5 text-gray-400 mr-3" />
-                <input 
-                  type="text" 
-                  placeholder="Location (e.g. Rangsit, Rama 4)" 
-                  className="w-full text-gray-900 focus:outline-none"
-                />
+                <select className="w-full text-gray-900 focus:outline-none bg-transparent">
+                  <option value="">Select Location</option>
+                  <optgroup label="BU Rangsit Campus">
+                    <option value="klong-luang">Klong Luang</option>
+                    <option value="chiang-rak">Chiang Rak</option>
+                    <option value="phahonyothin">Phahonyothin</option>
+                    <option value="golf-view">Golf View</option>
+                    <option value="rangsit-pirom">Rangsit Pirom</option>
+                  </optgroup>
+                  <optgroup label="BU City Campus (Rama 4)">
+                    <option value="rama-4">Rama 4</option>
+                    <option value="phra-khanong">Phra Khanong</option>
+                    <option value="ekkamai">Ekkamai</option>
+                    <option value="kluaynamthai">Kluaynamthai</option>
+                  </optgroup>
+                </select>
               </div>
               <div className="flex-1 flex items-center border-b md:border-b-0 md:border-r border-gray-200 px-4 py-2">
                 <Home className="h-5 w-5 text-gray-400 mr-3" />
@@ -129,7 +140,7 @@ function MainPage() {
             <div className="h-48 bg-gray-300 relative">
               <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80" alt="Condo" className="w-full h-full object-cover" />
               <span className="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                ฿12,000/mo
+                ฿13,000/mo
               </span>
             </div>
             <div className="p-6">
@@ -137,12 +148,12 @@ function MainPage() {
                 <MapPin className="h-4 w-4 mr-1" />
                 <span>Klong Luang, Pathum Thani</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Plum Condo Park Rangsit</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Kave Town Space</h3>
               <p className="text-gray-600 mb-4 line-clamp-2">
-                Modern studio unit, fully furnished, 5 mins walk to BU. Includes pool and gym access.
+                Modern design with extensive common areas. Close to BU, perfect for active students.
               </p>
               <div className="flex justify-between items-center pt-4 border-t border-gray-100">
-                <span className="text-sm text-gray-500">Studio • 1 Bath • 22 sqm</span>
+                <span className="text-sm text-gray-500">1 Bed • 1 Bath • 24 sqm</span>
                 <button className="text-blue-600 font-medium hover:text-blue-800">Details</button>
               </div>
             </div>
@@ -153,20 +164,20 @@ function MainPage() {
             <div className="h-48 bg-gray-300 relative">
               <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80" alt="Apartment" className="w-full h-full object-cover" />
               <span className="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                ฿8,500/mo
+                ฿14,500/mo
               </span>
             </div>
             <div className="p-6">
               <div className="flex items-center text-sm text-gray-500 mb-2">
                 <MapPin className="h-4 w-4 mr-1" />
-                <span>Chiang Rak, Pathum Thani</span>
+                <span>Klong Luang, Pathum Thani</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">The Kith Condo</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Kave Town Shift</h3>
               <p className="text-gray-600 mb-4 line-clamp-2">
-                Cozy 1-bedroom apartment. Quiet environment perfect for studying. Shuttle bus to campus.
+                Newer phase with upgraded facilities. High-speed internet and co-working spaces included.
               </p>
               <div className="flex justify-between items-center pt-4 border-t border-gray-100">
-                <span className="text-sm text-gray-500">1 Bed • 1 Bath • 28 sqm</span>
+                <span className="text-sm text-gray-500">1 Bed • 1 Bath • 25 sqm</span>
                 <button className="text-blue-600 font-medium hover:text-blue-800">Details</button>
               </div>
             </div>
@@ -183,14 +194,38 @@ function MainPage() {
             <div className="p-6">
               <div className="flex items-center text-sm text-gray-500 mb-2">
                 <MapPin className="h-4 w-4 mr-1" />
-                <span>Golf View, Pathum Thani</span>
+                <span>Klong Luang, Pathum Thani</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Dcondo Campus Resort</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Kave Town Colony</h3>
               <p className="text-gray-600 mb-4 line-clamp-2">
-                Luxury living with resort-style amenities. High security, close to food court and 7-11.
+                The latest addition to Kave Town. Resort-style living with premium amenities and security.
               </p>
               <div className="flex justify-between items-center pt-4 border-t border-gray-100">
-                <span className="text-sm text-gray-500">1 Bed • 1 Bath • 30 sqm</span>
+                <span className="text-sm text-gray-500">1 Bed • 1 Bath • 26 sqm</span>
+                <button className="text-blue-600 font-medium hover:text-blue-800">Details</button>
+              </div>
+            </div>
+          </div>
+
+          {/* Listing Card 4 */}
+          <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
+            <div className="h-48 bg-gray-300 relative">
+              <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80" alt="Dobedo Condo" className="w-full h-full object-cover" />
+              <span className="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                ฿12,500/mo
+              </span>
+            </div>
+            <div className="p-6">
+              <div className="flex items-center text-sm text-gray-500 mb-2">
+                <MapPin className="h-4 w-4 mr-1" />
+                <span>Chiang Rak, Pathum Thani</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Dobedo Condo</h3>
+              <p className="text-gray-600 mb-4 line-clamp-2">
+                Stylish student residence with vibrant community vibes. Great facilities and close to campus.
+              </p>
+              <div className="flex justify-between items-center pt-4 border-t border-gray-100">
+                <span className="text-sm text-gray-500">1 Bed • 1 Bath • 28 sqm</span>
                 <button className="text-blue-600 font-medium hover:text-blue-800">Details</button>
               </div>
             </div>

@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, render_template
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta
@@ -12,16 +12,21 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
 CORS(app, supports_credentials=True)
 bcrypt = Bcrypt(app)
 
-DATABASE = 'hellbook.db'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATABASE = os.path.join(BASE_DIR, 'hellbook.db')
 
 def get_db():
     conn = sqlite3.connect(DATABASE)
     conn.row_factory = sqlite3.Row
+    # Ensure foreign key constraints are enabled for this connection
+    conn.execute('PRAGMA foreign_keys = ON')
     return conn
 
 def init_db():
     with app.app_context():
         db = get_db()
+        # Enforce foreign key constraints
+        db.execute('PRAGMA foreign_keys = ON')
         
         # Users table
         db.execute('''CREATE TABLE IF NOT EXISTS users (
@@ -153,9 +158,10 @@ def init_db():
         )''')
         
         db.commit()
-        
+
         # Insert sample data
         seed_data(db)
+        db.close()
 
 def seed_data(db):
     # Check if data already exists
@@ -552,6 +558,11 @@ def create_report():
     db.commit()
     
     return jsonify({'message': 'Report submitted'}), 201
+
+@app.route('/')
+def home():
+    return render_template('index.html')  # Serve the frontend template
+
 
 if __name__ == '__main__':
     init_db()

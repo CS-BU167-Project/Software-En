@@ -358,6 +358,31 @@
             color: white;
         }
 
+        .user-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-bottom: 1px solid var(--ash-gray);
+            transition: background 0.3s;
+        }
+
+        .user-item:last-child {
+            border-bottom: none;
+        }
+
+        .user-item:hover {
+            background: var(--ash-gray);
+        }
+
+        .user-item img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--hell-red);
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -485,8 +510,8 @@
                     <button class="btn btn-secondary btn-small" onclick="showModal('loginModal')">Enter Hell</button>
                     <button class="btn btn-primary btn-small" onclick="showModal('registerModal')">Join</button>
                 </div>
-                <div id="userMenu" class="hidden">
-                    <span id="username" style="color: var(--hell-red); font-weight: bold;">😈 Lucifer</span>
+                <div id="userMenu" class="hidden" style="display: flex; align-items: center; gap: 10px;">
+                    <span id="username" style="color: var(--hell-red); font-weight: bold;"></span>
                     <button class="btn btn-small" onclick="logout()">Leave</button>
                 </div>
             </div>
@@ -511,6 +536,13 @@
                         <span class="stat-value">1337</span>
                         <span class="stat-label">Tormented Posts</span>
                     </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>👥 Active Demons</h3>
+                <div id="activeUsers" class="active-users">
+                    <!-- Active users will be loaded here -->
                 </div>
             </div>
 
@@ -609,236 +641,17 @@
                     <label>Content</label>
                     <textarea name="content" required class="textarea" rows="6" placeholder="Share your tormented tale..."></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Publish Confession</button>
+                                <button type="submit" class="btn btn-primary" style="width: 100%;">Publish Confession</button>
             </form>
         </div>
     </div>
 
-    <script>
-        let currentUser = null;
-        let posts = [
-            {
-                id: 1,
-                author: 'Lucifer',
-                avatar: '👹',
-                category: 'Eternal Torment',
-                title: 'Welcome to Hellbook',
-                content: 'This is your eternal home for sharing darkness, suffering, and evil tales. Post freely, for here there are no rules but chaos.',
-                likes: 666,
-                dislikes: 13,
-                comments: 42,
-                time: 'Just now'
-            },
-            {
-                id: 2,
-                author: 'Damned_Soul',
-                avatar: '👻',
-                category: 'Dark Confessions',
-                title: 'My First Day in Hell',
-                content: 'I arrived today and the heat is unbearable. The screaming never stops. Is this normal? How long does the adjustment period last?',
-                likes: 333,
-                dislikes: 7,
-                comments: 28,
-                time: '5m ago'
-            },
-            {
-                id: 3,
-                author: 'Hell_Hound',
-                avatar: '🐺',
-                category: 'Underworld Drama',
-                title: 'The River Styx is Flooding',
-                content: 'Charon is overwhelmed with new arrivals. Ferry service delayed by 100 years. Souls are piling up at the shore.',
-                likes: 234,
-                dislikes: 12,
-                comments: 15,
-                time: '1h ago'
-            },
-            {
-                id: 4,
-                author: 'Burning_Spirit',
-                avatar: '🔥',
-                category: 'Evil Tales',
-                title: 'Found a Secret Portal',
-                content: 'Deep in the 7th circle, there is a hidden portal. Nobody knows where it leads, but I heard whispers of something even darker...',
-                likes: 445,
-                dislikes: 8,
-                comments: 67,
-                time: '3h ago'
-            }
-        ];
+    <div id="postDetailModal" class="modal">
+        <div class="modal-content" id="postDetailContent">
+            <!-- Content will be loaded dynamically -->
+        </div>
+    </div>
 
-        const categories = [
-            { name: '🔥 Eternal Torment', desc: 'Share your endless suffering' },
-            { name: '💀 Dark Confessions', desc: 'Secrets from the damned' },
-            { name: '⚡ Underworld Drama', desc: 'Gossip from below' },
-            { name: '😈 Evil Tales', desc: 'Stories of wickedness' },
-            { name: '🎭 Soul Trading', desc: 'Bargains and deals' }
-        ];
-
-        function init() {
-            renderCategories();
-            renderPosts();
-        }
-
-        function renderCategories() {
-            const container = document.getElementById('categoriesList');
-            container.innerHTML = categories.map(cat => 
-                `<div class="category-item">${cat.name}</div>`
-            ).join('');
-        }
-
-        function renderPosts() {
-            const container = document.getElementById('postsContainer');
-            container.innerHTML = posts.map(post => `
-                <div class="post-card" onclick="viewPost(${post.id})">
-                    <div class="post-header">
-                        <div class="post-avatar">${post.avatar}</div>
-                        <div style="flex: 1;">
-                            <div class="post-author">${post.author}</div>
-                            <div class="post-meta">${post.time} • ${post.comments} comments</div>
-                        </div>
-                        <span class="post-category">${post.category}</span>
-                    </div>
-                    
-                    <h3 class="post-title">${post.title}</h3>
-                    <p class="post-content">${post.content}</p>
-                    
-                    <div class="post-actions">
-                        <button class="action-btn" onclick="event.stopPropagation(); likePost(${post.id})">
-                            👍 ${post.likes}
-                        </button>
-                        <button class="action-btn" onclick="event.stopPropagation()">
-                            👎 ${post.dislikes}
-                        </button>
-                        <button class="action-btn" onclick="event.stopPropagation()">
-                            💬 ${post.comments}
-                        </button>
-                        <button class="action-btn" onclick="event.stopPropagation(); sharePost(${post.id})">
-                            🔗 Share
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function showModal(id) {
-            document.getElementById(id).style.display = 'block';
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-        }
-
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.style.display = 'none';
-            }
-        }
-
-        function login(e) {
-            e.preventDefault();
-            currentUser = { username: 'Lucifer', avatar: '😈' };
-            document.getElementById('authButtons').classList.add('hidden');
-            document.getElementById('userMenu').classList.remove('hidden');
-            closeModal('loginModal');
-            showNotification('Welcome to Hell, ' + currentUser.username + '!', 'success');
-        }
-
-        function register(e) {
-            e.preventDefault();
-            closeModal('registerModal');
-            showNotification('Soul damned successfully! Please login.', 'success');
-            showModal('loginModal');
-        }
-
-        function logout() {
-            currentUser = null;
-            document.getElementById('authButtons').classList.remove('hidden');
-            document.getElementById('userMenu').classList.add('hidden');
-            showNotification('You have left Hell', 'info');
-        }
-
-        function createPost(e) {
-            e.preventDefault();
-            const form = e.target;
-            const newPost = {
-                id: posts.length + 1,
-                author: currentUser ? currentUser.username : 'Anonymous',
-                avatar: currentUser ? currentUser.avatar : '👤',
-                category: form.category.value,
-                title: form.title.value,
-                content: form.content.value,
-                likes: 0,
-                dislikes: 0,
-                comments: 0,
-                time: 'Just now'
-            };
-            posts.unshift(newPost);
-            renderPosts();
-            closeModal('createPostModal');
-            form.reset();
-            showNotification('Confession published!', 'success');
-        }
-
-        function likePost(id) {
-            const post = posts.find(p => p.id === id);
-            if (post) {
-                post.likes++;
-                renderPosts();
-                showNotification('Post liked!', 'success');
-            }
-        }
-
-        function sharePost(id) {
-            showNotification('Link copied to clipboard!', 'success');
-        }
-
-        function viewPost(id) {
-            showNotification('Post details opened', 'info');
-        }
-
-        function sortPosts(type) {
-            document.querySelectorAll('.sort-controls .btn').forEach(btn => {
-                btn.classList.remove('btn-primary');
-            });
-            event.target.classList.add('btn-primary');
-            
-            if (type === 'popular') {
-                posts.sort((a, b) => b.likes - a.likes);
-            } else if (type === 'trending') {
-                posts.sort((a, b) => b.comments - a.comments);
-            } else {
-                posts.sort((a, b) => b.id - a.id);
-            }
-            renderPosts();
-        }
-
-        function showHome() {
-            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-            event.target.classList.add('active');
-        }
-
-        function showTrending() {
-            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-            event.target.classList.add('active');
-            showNotification('Showing trending posts', 'info');
-        }
-
-        function showCategories() {
-            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-            event.target.classList.add('active');
-            showNotification('Browse categories', 'info');
-        }
-
-        function showNotification(message, type) {
-            const notif = document.createElement('div');
-            notif.className = 'notification';
-            notif.textContent = message;
-            document.body.appendChild(notif);
-            setTimeout(() => notif.remove(), 3000);
-        }
-
-        init();
-    </script>
+    <script src="{{ url_for('static', filename='script.js') }}?v=4"></script>
 </body>
 </html>

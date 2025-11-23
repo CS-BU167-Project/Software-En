@@ -5,12 +5,25 @@ from datetime import datetime, timedelta
 import sqlite3
 import os
 import secrets
+import re
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = secrets.token_hex(16)
+# Use a fixed secret key for development so sessions persist across restarts
+app.config['SECRET_KEY'] = 'dev-secret-key-666-hellbook-eternal-torment'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
-CORS(app, supports_credentials=True)
+# Allow all origins with credentials for development
+CORS(app, supports_credentials=True, origins=re.compile(r".*"))
 bcrypt = Bcrypt(app)
+
+@app.after_request
+def after_request(response):
+    origin = request.headers.get('Origin')
+    if origin:
+        response.headers.add('Access-Control-Allow-Origin', origin)
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    return response
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATABASE = os.path.join(BASE_DIR, 'hellbook.db')

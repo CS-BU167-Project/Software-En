@@ -1,5 +1,5 @@
-// API Configuration - use same origin as the served page so it works in dev and deployed environments
-const API_URL = window.location.origin + '/api';
+// API Configuration
+const API_URL = 'http://127.0.0.1:5000/api';
 let currentUser = null;
 let currentSort = 'newest';
 let currentCategory = null;
@@ -39,7 +39,6 @@ function updateUIForAuth(isAuthenticated) {
         authButtons.classList.add('hidden');
         userMenu.classList.remove('hidden');
         document.getElementById('username').textContent = currentUser.username;
-        document.getElementById('userAvatar').src = `/static/avatars/${currentUser.avatar}`;
     } else {
         authButtons.classList.remove('hidden');
         userMenu.classList.add('hidden');
@@ -74,7 +73,7 @@ async function login(event) {
             showNotification(data.error || 'Login failed', 'error');
         }
     } catch (error) {
-        showNotification('Connection error', 'error');
+        showNotification('Connection error: ' + error.message, 'error');
         console.error('Login error:', error);
     }
 }
@@ -184,7 +183,6 @@ function displayPosts(posts) {
     container.innerHTML = posts.map(post => `
         <div class="post-card" onclick="viewPost(${post.id})">
             <div class="post-header">
-                <img src="/static/avatars/${post.avatar}" alt="${post.username}" class="post-avatar" onerror="this.onerror=null;this.src='/static/avatars/default.svg'">
                 <div class="post-author-info">
                     <div class="post-author">${escapeHtml(post.username)}</div>
                     <div class="post-meta">
@@ -229,7 +227,6 @@ async function viewPost(postId) {
         const modalContent = document.getElementById('postDetailContent');
         modalContent.innerHTML = `
             <div class="post-header">
-                <img src="/static/avatars/${post.avatar}" alt="${post.username}" class="post-avatar">
                 <div class="post-author-info">
                     <div class="post-author">${escapeHtml(post.username)}</div>
                     <div class="post-meta">
@@ -275,7 +272,6 @@ async function viewPost(postId) {
                     ${comments.map(comment => `
                         <div class="comment">
                             <div class="comment-header">
-                                <img src="/static/avatars/${comment.avatar}" alt="${comment.username}" class="avatar" style="width: 30px; height: 30px;" onerror="this.onerror=null;this.src='/static/avatars/default.svg'">
                                 <span class="comment-author">${escapeHtml(comment.username)}</span>
                                 <span class="comment-date">${formatDate(comment.created_at)}</span>
                             </div>
@@ -437,7 +433,6 @@ async function loadActiveUsers() {
     const container = document.getElementById('activeUsers');
     container.innerHTML = activeUsers.map(user => `
         <div class="user-item">
-            <img src="/static/avatars/${user.avatar}" alt="${user.username}">
             <span>${escapeHtml(user.username)}</span>
         </div>
     `).join('');

@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hellbook - The Infernal Forum</title>
+    <style>
+        :root {
+            --hell-red: #ff0000;
+            --blood-red: #8b0000;
+            --dark-red: #660000;
+            --pure-black: #000000;
+            --deep-black: #0a0a0a;
+            --charcoal: #1a1a1a;
+            --ash-gray: #2a2a2a;
+            --smoke-gray: #3a3a3a;
+            --text-white: #e0e0e0;
+            --text-dim: #999999;
+            --fire-orange: #ff6600;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(180deg, var(--pure-black) 0%, var(--dark-red) 100%);
+            background-attachment: fixed;
+            color: var(--text-white);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(255, 0, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 102, 0, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            background: linear-gradient(90deg, var(--pure-black) 0%, var(--blood-red) 100%);
+            border-bottom: 3px solid var(--hell-red);
+            padding: 15px 0;
+            box-shadow: 0 4px 20px rgba(255, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            color: var(--hell-red);
+            text-shadow: 0 0 20px var(--hell-red), 0 0 40px var(--fire-orange);
+            margin: 0;
+            letter-spacing: 3px;
+        }
+
+        .tagline {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            font-style: italic;
+        }
+
+        .nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: var(--text-white);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 0, 0, 0.2);
+            color: var(--hell-red);
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--hell-red) 0%, var(--fire-orange) 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 0, 0, 0.6);
+        }
+
+        .btn-secondary {
+            background: var(--charcoal);
+            color: var(--text-white);
+            border: 1px solid var(--hell-red);
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 280px 1fr 300px;
+            gap: 25px;
+            padding: 30px 20px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, var(--charcoal) 0%, var(--deep-black) 100%);
+            border: 1px solid var(--blood-red);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .card h3 {
+            color: var(--hell-red);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            border-bottom: 2px solid var(--dark-red);
+            padding-bottom: 10px;
+        }
+
+        .category-item {
+            padding: 12px;
+            background: var(--ash-gray);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid var(--hell-red);
+            margin-bottom: 10px;
+        }
+
+        .category-item:hover {
+            background: var(--smoke-gray);
+            transform: translateX(5px);
+        }
+
+        .stats {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            background: var(--ash-gray);
+            border-radius: 5px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--hell-red);
+            text-shadow: 0 0 10px var(--hell-red);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: var(--charcoal);
+            border-radius: 10px;
+            border: 1px solid var(--blood-red);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .feed-header h2 {
+            color: var(--hell-red);
+            font-size: 1.8rem;
+        }
+
+        .sort-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .post-card {
+            background: linear-gradient(135deg, var(--charcoal) 0%, var(--deep-black) 100%);
+            border: 1px solid var(--blood-red);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(255, 0, 0, 0.3);
+            border-color: var(--hell-red);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .post-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--hell-red);
+            background: var(--blood-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .post-author {
+            color: var(--hell-red);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .post-meta {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        .post-category {
+            background: var(--blood-red);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        .post-title {
+            font-size: 1.5rem;
+            color: var(--text-white);
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+
+        .post-content {
+            color: var(--text-dim);
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--ash-gray);
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: var(--ash-gray);
+            border: none;
+            border-radius: 5px;
+            color: var(--text-white);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .action-btn:hover {
+            background: var(--smoke-gray);
+        }
+
+        .action-btn.liked {
+            color: var(--hell-red);
+            background: rgba(255, 0, 0, 0.2);
+        }
+
+        .tags-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag {
+            background: var(--ash-gray);
+            color: var(--hell-red);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid var(--blood-red);
+        }
+
+        .tag:hover {
+            background: var(--blood-red);
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--charcoal) 0%, var(--deep-black) 100%);
+            margin: 50px auto;
+            padding: 40px;
+            border: 2px solid var(--hell-red);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 50px rgba(255, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .modal-content h2 {
+            color: var(--hell-red);
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 2rem;
+            text-shadow: 0 0 15px var(--hell-red);
+        }
+
+        .close {
+            color: var(--text-dim);
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: var(--hell-red);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-white);
+            font-weight: 500;
+        }
+
+        .input, .textarea {
+            width: 100%;
+            padding: 12px;
+            background: var(--ash-gray);
+            border: 1px solid var(--blood-red);
+            border-radius: 5px;
+            color: var(--text-white);
+            font-size: 1rem;
+        }
+
+        .textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            padding: 15px 25px;
+            background: var(--hell-red);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.5);
+            z-index: 10000;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .hidden { display: none !important; }
+
+        @media (max-width: 1200px) {
+            .main-content { grid-template-columns: 250px 1fr 250px; }
+        }
+
+        @media (max-width: 992px) {
+            .main-content { grid-template-columns: 1fr; }
+            .sidebar, .trending { display: none; }
+        }
+
+        @media (max-width: 768px) {
+            .logo h1 { font-size: 1.5rem; }
+            .nav { gap: 10px; }
+            .post-title { font-size: 1.2rem; }
+            .modal-content { padding: 20px; margin: 20px auto; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container header-content">
+            <div class="logo">
+                <h1>🔥 HELLBOOK</h1>
+                <span class="tagline">Where Spirits Confess</span>
+            </div>
+            <nav class="nav">
+                <a class="nav-link active" onclick="showHome()">Home</a>
+                <a class="nav-link" onclick="showTrending()">Trending</a>
+                <a class="nav-link" onclick="showCategories()">Categories</a>
+            </nav>
+            <div class="user-actions">
+                <div id="authButtons">
+                    <button class="btn btn-secondary btn-small" onclick="showModal('loginModal')">Enter Hell</button>
+                    <button class="btn btn-primary btn-small" onclick="showModal('registerModal')">Join</button>
+                </div>
+                <div id="userMenu" class="hidden">
+                    <span id="username" style="color: var(--hell-red); font-weight: bold;">😈 Lucifer</span>
+                    <button class="btn btn-small" onclick="logout()">Leave</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container main-content">
+        <aside class="sidebar">
+            <div class="card">
+                <h3>🔥 Categories</h3>
+                <div id="categoriesList"></div>
+            </div>
+            
+            <div class="card">
+                <h3>📊 Statistics</h3>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-value">666</span>
+                        <span class="stat-label">Damned Souls</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">1337</span>
+                        <span class="stat-label">Tormented Posts</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" style="width: 100%;" onclick="showModal('createPostModal')">
+                ✍️ Confess Your Sins
+            </button>
+        </aside>
+
+        <section class="feed">
+            <div class="feed-header">
+                <h2>Latest Confessions</h2>
+                <div class="sort-controls">
+                    <button class="btn btn-small btn-primary" onclick="sortPosts('newest')">Newest</button>
+                    <button class="btn btn-small" onclick="sortPosts('popular')">Popular</button>
+                    <button class="btn btn-small" onclick="sortPosts('trending')">Trending</button>
+                </div>
+            </div>
+
+            <div id="postsContainer"></div>
+        </section>
+
+        <aside class="trending">
+            <div class="card">
+                <h3>🔥 Trending Tags</h3>
+                <div class="tags-cloud">
+                    <span class="tag">#torment</span>
+                    <span class="tag">#suffering</span>
+                    <span class="tag">#demons</span>
+                    <span class="tag">#fire</span>
+                    <span class="tag">#darkness</span>
+                    <span class="tag">#eternity</span>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <h2>Enter the Underworld</h2>
+            <form onsubmit="login(event)">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" required class="input" placeholder="Lucifer">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required class="input">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Enter Hell</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('registerModal')">&times;</span>
+            <h2>Damn Your Soul</h2>
+            <form onsubmit="register(event)">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" required class="input">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required class="input">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required class="input">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Join the Damned</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="createPostModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('createPostModal')">&times;</span>
+            <h2>Confess Your Sins</h2>
+            <form onsubmit="createPost(event)">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" name="title" required class="input" placeholder="Your dark confession...">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select name="category" class="input">
+                        <option>🔥 Eternal Torment</option>
+                        <option>💀 Dark Confessions</option>
+                        <option>⚡ Underworld Drama</option>
+                        <option>😈 Evil Tales</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Content</label>
+                    <textarea name="content" required class="textarea" rows="6" placeholder="Share your tormented tale..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Publish Confession</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let posts = [
+            {
+                id: 1,
+                author: 'Lucifer',
+                avatar: '👹',
+                category: 'Eternal Torment',
+                title: 'Welcome to Hellbook',
+                content: 'This is your eternal home for sharing darkness, suffering, and evil tales. Post freely, for here there are no rules but chaos.',
+                likes: 666,
+                dislikes: 13,
+                comments: 42,
+                time: 'Just now'
+            },
+            {
+                id: 2,
+                author: 'Damned_Soul',
+                avatar: '👻',
+                category: 'Dark Confessions',
+                title: 'My First Day in Hell',
+                content: 'I arrived today and the heat is unbearable. The screaming never stops. Is this normal? How long does the adjustment period last?',
+                likes: 333,
+                dislikes: 7,
+                comments: 28,
+                time: '5m ago'
+            },
+            {
+                id: 3,
+                author: 'Hell_Hound',
+                avatar: '🐺',
+                category: 'Underworld Drama',
+                title: 'The River Styx is Flooding',
+                content: 'Charon is overwhelmed with new arrivals. Ferry service delayed by 100 years. Souls are piling up at the shore.',
+                likes: 234,
+                dislikes: 12,
+                comments: 15,
+                time: '1h ago'
+            },
+            {
+                id: 4,
+                author: 'Burning_Spirit',
+                avatar: '🔥',
+                category: 'Evil Tales',
+                title: 'Found a Secret Portal',
+                content: 'Deep in the 7th circle, there is a hidden portal. Nobody knows where it leads, but I heard whispers of something even darker...',
+                likes: 445,
+                dislikes: 8,
+                comments: 67,
+                time: '3h ago'
+            }
+        ];
+
+        const categories = [
+            { name: '🔥 Eternal Torment', desc: 'Share your endless suffering' },
+            { name: '💀 Dark Confessions', desc: 'Secrets from the damned' },
+            { name: '⚡ Underworld Drama', desc: 'Gossip from below' },
+            { name: '😈 Evil Tales', desc: 'Stories of wickedness' },
+            { name: '🎭 Soul Trading', desc: 'Bargains and deals' }
+        ];
+
+        function init() {
+            renderCategories();
+            renderPosts();
+        }
+
+        function renderCategories() {
+            const container = document.getElementById('categoriesList');
+            container.innerHTML = categories.map(cat => 
+                `<div class="category-item">${cat.name}</div>`
+            ).join('');
+        }
+
+        function renderPosts() {
+            const container = document.getElementById('postsContainer');
+            container.innerHTML = posts.map(post => `
+                <div class="post-card" onclick="viewPost(${post.id})">
+                    <div class="post-header">
+                        <div class="post-avatar">${post.avatar}</div>
+                        <div style="flex: 1;">
+                            <div class="post-author">${post.author}</div>
+                            <div class="post-meta">${post.time} • ${post.comments} comments</div>
+                        </div>
+                        <span class="post-category">${post.category}</span>
+                    </div>
+                    
+                    <h3 class="post-title">${post.title}</h3>
+                    <p class="post-content">${post.content}</p>
+                    
+                    <div class="post-actions">
+                        <button class="action-btn" onclick="event.stopPropagation(); likePost(${post.id})">
+                            👍 ${post.likes}
+                        </button>
+                        <button class="action-btn" onclick="event.stopPropagation()">
+                            👎 ${post.dislikes}
+                        </button>
+                        <button class="action-btn" onclick="event.stopPropagation()">
+                            💬 ${post.comments}
+                        </button>
+                        <button class="action-btn" onclick="event.stopPropagation(); sharePost(${post.id})">
+                            🔗 Share
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showModal(id) {
+            document.getElementById(id).style.display = 'block';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        function login(e) {
+            e.preventDefault();
+            currentUser = { username: 'Lucifer', avatar: '😈' };
+            document.getElementById('authButtons').classList.add('hidden');
+            document.getElementById('userMenu').classList.remove('hidden');
+            closeModal('loginModal');
+            showNotification('Welcome to Hell, ' + currentUser.username + '!', 'success');
+        }
+
+        function register(e) {
+            e.preventDefault();
+            closeModal('registerModal');
+            showNotification('Soul damned successfully! Please login.', 'success');
+            showModal('loginModal');
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('authButtons').classList.remove('hidden');
+            document.getElementById('userMenu').classList.add('hidden');
+            showNotification('You have left Hell', 'info');
+        }
+
+        function createPost(e) {
+            e.preventDefault();
+            const form = e.target;
+            const newPost = {
+                id: posts.length + 1,
+                author: currentUser ? currentUser.username : 'Anonymous',
+                avatar: currentUser ? currentUser.avatar : '👤',
+                category: form.category.value,
+                title: form.title.value,
+                content: form.content.value,
+                likes: 0,
+                dislikes: 0,
+                comments: 0,
+                time: 'Just now'
+            };
+            posts.unshift(newPost);
+            renderPosts();
+            closeModal('createPostModal');
+            form.reset();
+            showNotification('Confession published!', 'success');
+        }
+
+        function likePost(id) {
+            const post = posts.find(p => p.id === id);
+            if (post) {
+                post.likes++;
+                renderPosts();
+                showNotification('Post liked!', 'success');
+            }
+        }
+
+        function sharePost(id) {
+            showNotification('Link copied to clipboard!', 'success');
+        }
+
+        function viewPost(id) {
+            showNotification('Post details opened', 'info');
+        }
+
+        function sortPosts(type) {
+            document.querySelectorAll('.sort-controls .btn').forEach(btn => {
+                btn.classList.remove('btn-primary');
+            });
+            event.target.classList.add('btn-primary');
+            
+            if (type === 'popular') {
+                posts.sort((a, b) => b.likes - a.likes);
+            } else if (type === 'trending') {
+                posts.sort((a, b) => b.comments - a.comments);
+            } else {
+                posts.sort((a, b) => b.id - a.id);
+            }
+            renderPosts();
+        }
+
+        function showHome() {
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function showTrending() {
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
+            showNotification('Showing trending posts', 'info');
+        }
+
+        function showCategories() {
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
+            showNotification('Browse categories', 'info');
+        }
+
+        function showNotification(message, type) {
+            const notif = document.createElement('div');
+            notif.className = 'notification';
+            notif.textContent = message;
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 3000);
+        }
+
+        init();
+    </script>
+</body>
+</html>
